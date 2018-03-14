@@ -1,83 +1,106 @@
-import java.util.Objects;
-import java.util.Vector;
+import java.util.Arrays;
 
 public class BitSet {
-    private Vector<Object> vector;
+    private boolean[] bitAr;
 
-    public BitSet(Vector<Object> v) {
-        this.vector = v;
+    private BitSet(int size, boolean b) {
+        bitAr = new boolean[size];
+        if (b) for (boolean a : bitAr) a = true;
+        else for (boolean a : bitAr) a = false;
     }
 
-    public BitSet() {
-        this.vector = new Vector<>();
-    }
-
-    public BitSet(Object... objs) {
-        Vector<Object> res = new Vector<>();
-        for (Object o : objs) {
-            res.add(o);
-        }
-        this.vector = res;
-    }
-
-    public boolean contains(Object a) {
-        return vector.contains(a);
-    }
-
-    public void add(Object a) {
-        vector.add(a);
-    }
-
-    public void remove(Object a) {
-        if (vector.contains(a)) {
-            vector.remove(a);
-        } else {
-            System.out.println("error: element is not found");
+    BitSet(String bits) {
+        bitAr = new boolean[bits.length()];
+        for (int i = 0; i < bits.length(); i++) {
+            if (bits.charAt(i) == '1' || bits.charAt(i) == '0') bitAr[i] = bits.charAt(i) == '1';
+            else throw new IllegalArgumentException();
         }
     }
 
     public BitSet and(BitSet other) {
-        BitSet res = new BitSet();
-        for (Object elem : vector) {
-            if (other.vector.contains(elem)) {
-                res.add(elem);
-            }
-        }
+        BitSet res = new BitSet(bitAr.length, false);
+        if (this.bitAr.length != other.bitAr.length) throw new IllegalArgumentException();
+        else for (int i = 0; i < bitAr.length; i++) res.bitAr[i] = bitAr[i] == other.bitAr[i] && bitAr[i];
         return res;
     }
 
     public BitSet or(BitSet other) {
-        BitSet res = new BitSet(other.vector);
-        for (Object elem : vector) {
-            if (!other.vector.contains(elem)) {
-                res.add(elem);
-            }
-        }
+        BitSet res = new BitSet(bitAr.length, false);
+        if (this.bitAr.length != other.bitAr.length) throw new IllegalArgumentException();
+        else for (int i = 0; i < bitAr.length; i++) res.bitAr[i] = bitAr[i] != other.bitAr[i] || bitAr[i];
         return res;
     }
 
-    public Vector<Object> getVector() {
-        return vector;
+    public BitSet xor(BitSet other) {
+        BitSet res = new BitSet(bitAr.length, false);
+        if (this.bitAr.length != other.bitAr.length) throw new IllegalArgumentException();
+        else for (int i = 0; i < bitAr.length; i++) res.bitAr[i] = bitAr[i] != other.bitAr[i];
+        return res;
+    }
+
+    public BitSet createFromArray(boolean[] b) {
+        bitAr = b;
+        return this;
+    }
+
+    public boolean contains(String elems) {
+        boolean b = true;
+        for (int i = 0; i < elems.length(); i++) b = bitAr[i] == new BitSet(elems).bitAr[i];
+        return b;
+    }
+
+    public BitSet add(int place, String elems) {
+        BitSet res = new BitSet("1");
+        int lE = elems.length();
+        int lB = bitAr.length;
+        boolean[] tmp = new boolean[lB + lE];
+        BitSet t = new BitSet(elems);
+        if (place == 0) System.arraycopy(t.bitAr, 0, tmp, 0, lE);
+        else {
+            System.arraycopy(bitAr, 0, tmp, 0, place);
+            System.arraycopy(t.bitAr, 0, tmp, place, lE);
+            System.arraycopy(bitAr, place, tmp, place + lE, place);
+        }
+        return res.createFromArray(tmp);
+    }
+
+    public BitSet remove(int place, String elems) {
+        BitSet res = new BitSet("1");
+        int lE = elems.length();
+        int lB = bitAr.length;
+        boolean[] tmp = new boolean[lB - lE];
+        if (!this.contains(elems)) throw new IllegalArgumentException();
+        if (place == 0) System.arraycopy(bitAr, place, tmp, 0, lE);
+        else {
+            System.arraycopy(bitAr, 0, tmp, 0, place);
+            System.arraycopy(bitAr, place + lE, tmp, place, lB - place - lE);
+        }
+        return res.createFromArray(tmp);
+    }
+
+    public boolean[] getBitAr() {
+        return bitAr;
+    }
+
+    public void setBitAr(boolean[] bitAr) {
+        this.bitAr = bitAr;
     }
 
     @Override
     public String toString() {
-        return vector.toString();
+        return Arrays.toString(bitAr);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BitSet bitSet = (BitSet) o;
+        return Arrays.equals(bitAr, bitSet.bitAr);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(vector);
+        return Arrays.hashCode(bitAr);
     }
-
-    @Override
-    public boolean equals(Object other) {
-        if (this == other) return true;
-        if (other instanceof BitSet) {
-            BitSet obj = (BitSet) other;
-            return this.vector.containsAll(obj.getVector());
-        }
-        return false;
-    }
-
 }

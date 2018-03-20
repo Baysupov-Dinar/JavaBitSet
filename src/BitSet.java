@@ -3,87 +3,106 @@ import java.util.Arrays;
 public class BitSet {
     private boolean[] bitAr;
 
-    private BitSet(int size, boolean b) {
+    public BitSet(int size) {
         bitAr = new boolean[size];
-        if (b) for (boolean a : bitAr) a = true;
-        else for (boolean a : bitAr) a = false;
     }
 
-    BitSet(String bits) {
+    public BitSet(String bits) {
         bitAr = new boolean[bits.length()];
         for (int i = 0; i < bits.length(); i++) {
-            if (bits.charAt(i) == '1' || bits.charAt(i) == '0') bitAr[i] = bits.charAt(i) == '1';
-            else throw new IllegalArgumentException();
+            switch (bits.charAt(i)) {
+                case '1':
+                    bitAr[i] = true;
+                    break;
+                case '0':
+                    bitAr[i] = false;
+                    break;
+                default:
+                    throw new IllegalArgumentException();
+            }
         }
     }
 
+    public BitSet(boolean[] b) {
+        bitAr = new boolean[b.length];
+        System.arraycopy(b, 0, bitAr, 0, b.length);
+    }
+
     public BitSet and(BitSet other) {
-        BitSet res = new BitSet(bitAr.length, false);
         if (this.bitAr.length != other.bitAr.length) throw new IllegalArgumentException();
-        else for (int i = 0; i < bitAr.length; i++) res.bitAr[i] = bitAr[i] == other.bitAr[i] && bitAr[i];
+        BitSet res = new BitSet(bitAr.length);
+        for (int i = 0; i < bitAr.length; i++) res.bitAr[i] = bitAr[i] && other.bitAr[i];
         return res;
     }
 
     public BitSet or(BitSet other) {
-        BitSet res = new BitSet(bitAr.length, false);
         if (this.bitAr.length != other.bitAr.length) throw new IllegalArgumentException();
-        else for (int i = 0; i < bitAr.length; i++) res.bitAr[i] = bitAr[i] != other.bitAr[i] || bitAr[i];
+        BitSet res = new BitSet(bitAr.length);
+        for (int i = 0; i < bitAr.length; i++) res.bitAr[i] = bitAr[i] || other.bitAr[i];
         return res;
     }
 
-    public BitSet xor(BitSet other) {
-        BitSet res = new BitSet(bitAr.length, false);
-        if (this.bitAr.length != other.bitAr.length) throw new IllegalArgumentException();
-        else for (int i = 0; i < bitAr.length; i++) res.bitAr[i] = bitAr[i] != other.bitAr[i];
+    public BitSet not() {
+        BitSet res = new BitSet(bitAr.length);
+        for (int i = 0; i < bitAr.length; i++) res.bitAr[i] = !bitAr[i];
         return res;
     }
 
-    public BitSet createFromArray(boolean[] b) {
-        bitAr = b;
-        return this;
+    public boolean contains(int place) {
+        if (0 > place || place > bitAr.length) throw new IllegalArgumentException();
+        return bitAr[place];
     }
 
-    public boolean contains(String elems) {
-        boolean b = true;
-        for (int i = 0; i < elems.length(); i++) b = bitAr[i] == new BitSet(elems).bitAr[i];
-        return b;
-    }
-
-    public BitSet add(int place, String elems) {
-        BitSet res = new BitSet("1");
-        int lE = elems.length();
-        int lB = bitAr.length;
-        boolean[] tmp = new boolean[lB + lE];
-        BitSet t = new BitSet(elems);
-        if (place == 0) System.arraycopy(t.bitAr, 0, tmp, 0, lE);
-        else {
-            System.arraycopy(bitAr, 0, tmp, 0, place);
-            System.arraycopy(t.bitAr, 0, tmp, place, lE);
-            System.arraycopy(bitAr, place, tmp, place + lE, place);
+    public boolean containsAr(int[] place) {
+        for (int elem : place) {
+            if (0 > elem || elem > bitAr.length) throw new IllegalArgumentException();
+            if (!bitAr[elem]) {
+                return false;
+            }
         }
-        return res.createFromArray(tmp);
+        return true;
     }
 
-    public BitSet remove(int place, String elems) {
-        BitSet res = new BitSet("1");
-        int lE = elems.length();
-        int lB = bitAr.length;
-        boolean[] tmp = new boolean[lB - lE];
-        if (!this.contains(elems)) throw new IllegalArgumentException();
-        if (place == 0) System.arraycopy(bitAr, place, tmp, 0, lE);
-        else {
-            System.arraycopy(bitAr, 0, tmp, 0, place);
-            System.arraycopy(bitAr, place + lE, tmp, place, lB - place - lE);
+    public boolean add(int place) {
+        boolean check=false;
+        if (0 > place || place > bitAr.length) throw new IllegalArgumentException();
+            if(!bitAr[place]) check = true;
+            bitAr[place] = true;
+        return check;
+    }
+
+    public boolean addAr(int[] place) {
+        boolean check=false;
+        for (int elem : place) {
+            if (0 > elem || elem > bitAr.length) throw new IllegalArgumentException();
+            if(!bitAr[elem]) check = true;
+            bitAr[elem] = true;
         }
-        return res.createFromArray(tmp);
+        return check;
+    }
+
+    public boolean remove(int place) {
+        boolean check=false;
+        if (0 > place || place > bitAr.length) throw new IllegalArgumentException();
+            if(bitAr[place]) check = true;
+            bitAr[place] = false;
+        return check;
+    }
+
+    public boolean removeAr(int[] place) {
+        boolean check=false;
+        for (int elem : place) {
+            if (0 > elem || elem > bitAr.length) throw new IllegalArgumentException();
+            if(bitAr[elem]) check = true;
+            bitAr[elem] = false;
+        }
+        return check;
     }
 
     public boolean[] getBitAr() {
-        return bitAr;
-    }
-
-    public void setBitAr(boolean[] bitAr) {
-        this.bitAr = bitAr;
+        boolean[] b = new boolean[bitAr.length];
+        System.arraycopy(bitAr, 0, b, 0, bitAr.length);
+        return b;
     }
 
     @Override

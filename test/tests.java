@@ -18,33 +18,53 @@ public class tests {
     }
 
     @Test
-    public void xor() {
+    public void not() {
         BitSet a = new BitSet("1001");
-        BitSet b = new BitSet("0011");
-        assertEquals(new BitSet("1010"), a.xor(b));
+        assertEquals(new BitSet("0110"), a.not());
     }
 
     @Test
     public void createFromArray() {
         BitSet a = new BitSet("1001");
-        assertEquals(new BitSet("01"), a.createFromArray(new boolean[]{false, true}));
+        assertEquals(new BitSet("01"), new BitSet(new boolean[]{false, true}));
     }
 
     @Test
     public void contains() {
         BitSet a = new BitSet("1001");
-        assertEquals(true, a.contains("00"));
+        assertEquals(true, a.contains(0));
+    }
+
+    @Test
+    public void containsAr() {
+        BitSet a = new BitSet("1001");
+        assertEquals(true, a.containsAr(new int[]{0,3}));
     }
 
     @Test
     public void add() {
         BitSet a = new BitSet("1001");
-        assertEquals(new BitSet("101101"), a.add(2, "11"));
+        assertEquals(true, a.add(1));
     }
 
     @Test
+    public void addAr() {
+        BitSet a = new BitSet("1001");
+        assertEquals(true, a.addAr(new int[]{1,2}));
+        BitSet b = new BitSet("1001");
+        assertEquals(false, b.addAr(new int[]{0,3}));
+    }
+    @Test
     public void remove() {
         BitSet a = new BitSet("1001");
-        assertEquals(new BitSet("11"), a.remove(1, "00"));
+        assertEquals(true, a.remove(0));
+    }
+
+    @Test
+    public void removeAr() {
+        BitSet a = new BitSet("1001");
+        assertEquals(true, a.removeAr(new int[]{0,3}));
+        BitSet b = new BitSet("1001");
+        assertEquals(false, b.removeAr(new int[]{1,2}));
     }
 }

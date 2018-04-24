@@ -49,41 +49,39 @@ public class BitSet {
     }
 
     public boolean contains(int place) {
-        if (0 > place || place > bitAr.length) throw new IllegalArgumentException();
+        if (0 > place || place > bitAr.length) throw new IndexOutOfBoundsException();
         return bitAr[place];
     }
 
-    public boolean containsAr(int[] place) {
+    public boolean contains(int[] place) {
         for (int elem : place) {
-            if (0 > elem || elem > bitAr.length) throw new IllegalArgumentException();
-            if (!bitAr[elem]) {
-                return false;
-            }
+            if(!this.contains(elem))return false;
         }
         return true;
     }
 
     public boolean add(int place) {
         boolean check=false;
-        if (0 > place || place > bitAr.length) throw new IllegalArgumentException();
+        if (0 > place || place > bitAr.length) throw new IndexOutOfBoundsException();
             if(!bitAr[place]) check = true;
             bitAr[place] = true;
         return check;
     }
 
-    public boolean addAr(int[] place) {
+    public boolean add(int[] place) {
         boolean check=false;
         for (int elem : place) {
-            if (0 > elem || elem > bitAr.length) throw new IllegalArgumentException();
-            if(!bitAr[elem]) check = true;
-            bitAr[elem] = true;
+            if(this.add(elem))check = true;
+//            if (0 > elem || elem > bitAr.length) throw new IndexOutOfBoundsException();
+//            if(!bitAr[elem]) check = true;
+//            bitAr[elem] = true;
         }
         return check;
     }
 
     public boolean remove(int place) {
         boolean check=false;
-        if (0 > place || place > bitAr.length) throw new IllegalArgumentException();
+        if (0 > place || place > bitAr.length) throw new IndexOutOfBoundsException();
             if(bitAr[place]) check = true;
             bitAr[place] = false;
         return check;
@@ -92,7 +90,7 @@ public class BitSet {
     public boolean removeAr(int[] place) {
         boolean check=false;
         for (int elem : place) {
-            if (0 > elem || elem > bitAr.length) throw new IllegalArgumentException();
+            if (0 > elem || elem > bitAr.length) throw new IndexOutOfBoundsException();
             if(bitAr[elem]) check = true;
             bitAr[elem] = false;
         }

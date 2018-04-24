@@ -38,7 +38,11 @@ public class tests {
     @Test
     public void containsAr() {
         BitSet a = new BitSet("1001");
-        assertEquals(true, a.containsAr(new int[]{0,3}));
+        assertEquals(true, a.contains(new int[]{0,3}));
+        BitSet b = new BitSet("1001");
+        assertEquals(false, b.contains(new int[]{1,3}));
+        BitSet c = new BitSet("1001");
+        assertEquals(false, c.contains(new int[]{1,2}));
     }
 
     @Test
@@ -50,9 +54,11 @@ public class tests {
     @Test
     public void addAr() {
         BitSet a = new BitSet("1001");
-        assertEquals(true, a.addAr(new int[]{1,2}));
+        assertEquals(true, a.add(new int[]{1,2}));
         BitSet b = new BitSet("1001");
-        assertEquals(false, b.addAr(new int[]{0,3}));
+        assertEquals(false, b.add(new int[]{0,3}));
+        BitSet c = new BitSet("1001");
+        assertEquals(true, c.add(new int[]{0,2}));
     }
     @Test
     public void remove() {

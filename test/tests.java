@@ -69,8 +69,8 @@ public class tests {
     @Test
     public void removeAr() {
         BitSet a = new BitSet("1001");
-        assertEquals(true, a.removeAr(new int[]{0,3}));
+        assertEquals(true, a.remove(new int[]{0,3}));
         BitSet b = new BitSet("1001");
-        assertEquals(false, b.removeAr(new int[]{1,2}));
+        assertEquals(false, b.remove(new int[]{1,2}));
     }
 }

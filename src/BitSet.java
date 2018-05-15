@@ -72,9 +72,6 @@ public class BitSet {
         boolean check=false;
         for (int elem : place) {
             if(this.add(elem))check = true;
-//            if (0 > elem || elem > bitAr.length) throw new IndexOutOfBoundsException();
-//            if(!bitAr[elem]) check = true;
-//            bitAr[elem] = true;
         }
         return check;
     }
@@ -87,12 +84,10 @@ public class BitSet {
         return check;
     }
 
-    public boolean removeAr(int[] place) {
+    public boolean remove(int[] place) {
         boolean check=false;
         for (int elem : place) {
-            if (0 > elem || elem > bitAr.length) throw new IndexOutOfBoundsException();
-            if(bitAr[elem]) check = true;
-            bitAr[elem] = false;
+            if(this.remove(elem))check = true;
         }
         return check;
     }
